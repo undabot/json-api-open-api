@@ -40,9 +40,10 @@ abstract class AbstractResourceSchema
         return [
             'type' => 'object',
             'nullable' => false,
-            'required' => array_keys(array_filter($relationshipSchemas, function (RelationshipSchema $relationshipSchema) {
-                return $relationshipSchema->isRequired();
-            })),
+            'required' => array_keys(array_filter($relationshipSchemas,
+                function (RelationshipSchema $relationshipSchema) {
+                    return $relationshipSchema->isRequired();
+                })),
             'properties' => $relationships,
         ];
     }

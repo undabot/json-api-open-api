@@ -9,9 +9,9 @@ use JsonApiOpenApi\Annotation\Scanner\RelationshipScanner;
 use JsonApiOpenApi\Helper\RequestHandlerScanner;
 use JsonApiOpenApi\Model\JsonApi\Schema\SchemaCollection;
 use JsonApiOpenApi\Model\OpenApi\ResourceSchemaInterface;
-use Undabot\JsonApi\Model\Resource\ResourceInterface;
-use Undabot\SymfonyJsonApi\RequestHandler\CreateResourceRequestHandlerInterface;
-use Undabot\SymfonyJsonApi\RequestHandler\UpdateResourceRequestHandlerInterface;
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
 
 class ResourceSchemaFactory
 {
@@ -30,54 +30,61 @@ class ResourceSchemaFactory
         return $schema;
     }
 
+    /**
+     * @throws ReflectionException
+     */
     private function createCreateSchema(
         string $type,
-        ?CreateResourceRequestHandlerInterface $createResourceRequestHandler
+        ?string $createResourceRequestHandlerClass = null
     ): ?ResourceSchemaInterface {
-
-        if (null === $createResourceRequestHandler) {
+        if (null === $createResourceRequestHandlerClass) {
             return null;
         }
 
-        $attributes = RequestHandlerScanner::getAttributes($createResourceRequestHandler);
-        $relationships = RequestHandlerScanner::getRelationships($createResourceRequestHandler);
+        $attributes = RequestHandlerScanner::getAttributes($createResourceRequestHandlerClass);
+        $relationships = RequestHandlerScanner::getRelationships($createResourceRequestHandlerClass);
 
         $schema = new ResourceCreateSchema($type, $attributes, $relationships);
 
         return $schema;
     }
 
-
+    /**
+     * @throws ReflectionException
+     */
     private function createUpdateSchema(
         string $type,
-        ?UpdateResourceRequestHandlerInterface $updateResourceRequestHandler
+        ?string $updateResourceRequestHandlerClass = null
     ): ?ResourceSchemaInterface {
-        if (null === $updateResourceRequestHandler) {
+        if (null === $updateResourceRequestHandlerClass) {
             return null;
         }
 
-        $attributes = RequestHandlerScanner::getAttributes($updateResourceRequestHandler);
-        $relationships = RequestHandlerScanner::getRelationships($updateResourceRequestHandler);
+        $attributes = RequestHandlerScanner::getAttributes($updateResourceRequestHandlerClass);
+        $relationships = RequestHandlerScanner::getRelationships($updateResourceRequestHandlerClass);
 
         $schema = new ResourceUpdateSchema($type, $attributes, $relationships);
 
         return $schema;
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function createSchemaSet(
         string $resourceClass,
-        ?CreateResourceRequestHandlerInterface $createResourceRequestHandler = null,
-        ?UpdateResourceRequestHandlerInterface $updateResourceRequestHandler = null
+        ?string $createResourceRequestHandlerClass = null,
+        ?string $updateResourceRequestHandlerClass = null
     ): ResourceSchemaSet {
 
         // @todo is there better way to use the const
-        $type = $resourceClass::TYPE;
+        $type = $this->detectResourceType($resourceClass);
 
         $schemaSet = new ResourceSchemaSet(
             $this->createIdentifier($type),
             $this->createReadSchema($resourceClass, $type),
-            $this->createCreateSchema($type, $createResourceRequestHandler),
-            $this->createUpdateSchema($type, $updateResourceRequestHandler),
+            $this->createCreateSchema($type, $createResourceRequestHandlerClass),
+            $this->createUpdateSchema($type, $updateResourceRequestHandlerClass),
             );
 
         // Add to collection by FQCN and resource type
@@ -85,5 +92,25 @@ class ResourceSchemaFactory
         SchemaCollection::add($type, $schemaSet);
 
         return $schemaSet;
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    private function detectResourceType(string $resourceClass): string
+    {
+        $reflectionClass = new ReflectionClass($resourceClass);
+        $constants = $reflectionClass->getConstants();
+        $constantNames = array_keys($constants);
+
+        if (true === in_array('TYPE', $constantNames)) {
+            return $constants['TYPE'];
+        }
+
+        if (true === in_array('RESOURCE_TYPE', $constantNames)) {
+            return $constants['RESOURCE_TYPE'];
+        }
+
+        throw new RuntimeException('Can\'t detect type for given resource: ' . $resourceClass);
     }
 }

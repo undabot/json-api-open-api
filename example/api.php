@@ -19,11 +19,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $resourceSchemaFactory = new ResourceSchemaFactory();
 
-$createBookRequestHandler = new CreateBookRequestHandler();
-$updateBookRequestHandler = new UpdateBookRequestHandler();
-
 $resourceSchemaFactory->createSchemaSet(Author::class);
-$resourceSchemaFactory->createSchemaSet(Book::class, $createBookRequestHandler, $updateBookRequestHandler);
+$resourceSchemaFactory->createSchemaSet(Book::class, CreateBookRequestHandler::class, UpdateBookRequestHandler::class);
 $resourceSchemaFactory->createSchemaSet(Tag::class);
 
 $api = new Api(

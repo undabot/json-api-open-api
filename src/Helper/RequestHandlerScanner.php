@@ -6,39 +6,40 @@ namespace JsonApiOpenApi\Helper;
 
 use Example\Book\RequestHandler\InputAttribute;
 use Example\Book\RequestHandler\InputRelationship;
+use InvalidArgumentException;
 use JsonApiOpenApi\Model\JsonApi\Schema\AttributeSchema;
 use JsonApiOpenApi\Model\JsonApi\Schema\RelationshipSchema;
+use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
-use Undabot\SymfonyJsonApi\RequestHandler\CreateResourceRequestHandlerInterface;
-use Undabot\SymfonyJsonApi\RequestHandler\UpdateResourceRequestHandlerInterface;
 
 class RequestHandlerScanner
 {
-    public static function getAttributes($requestHandler): array
+    /**
+     * @throws ReflectionException
+     */
+    public static function getAttributes(string $requestHandlerClass): array
     {
-        if (false === is_subclass_of($requestHandler, CreateResourceRequestHandlerInterface::class) &&
-            false === is_subclass_of($requestHandler, UpdateResourceRequestHandlerInterface::class)) {
-            throw new \InvalidArgumentException('Invalid RequestHandler provided');
+        if (false === method_exists($requestHandlerClass, 'getAttributes')) {
+            throw new InvalidArgumentException('RequestHandler doesn\'t have getAttributes method');
         }
+
+        $reflectionClass = new ReflectionClass($requestHandlerClass);
+        $requestHandlerInstance = $reflectionClass->newInstanceWithoutConstructor();
+
+        $getAttributesMethod = new ReflectionMethod($requestHandlerInstance, 'getAttributes');
+        $getAttributesMethod->setAccessible(true);
 
         $attributes = [];
 
-        if (false === method_exists($requestHandler, 'getAttributes')) {
-            throw new \InvalidArgumentException('RequestHandler doesn\'t have getAttributes method');
-        }
-
-        $getAttributesMethod = new ReflectionMethod($requestHandler, 'getAttributes');
-        $getAttributesMethod->setAccessible(true);
-
         /** @var InputAttribute $definedAttribute */
-        foreach ($getAttributesMethod->invoke($requestHandler) as $definedAttribute) {
-
+        foreach ($getAttributesMethod->invoke($requestHandlerInstance) as $definedAttribute) {
             $type = null;
-
             $nullable = true;
+
             foreach ($definedAttribute->getConstraints() as $constraint) {
                 if ($constraint instanceof NotNull || $constraint instanceof NotBlank) {
                     $nullable = false;
@@ -54,7 +55,7 @@ class RequestHandlerScanner
                 $type,
                 false === $definedAttribute->isOptional(),
                 $nullable,
-                null,
+                null, // @todo add support for attribute descriptions on write models
                 null,
                 null,
                 );
@@ -63,28 +64,28 @@ class RequestHandlerScanner
         return $attributes;
     }
 
-    public static function getRelationships($requestHandler): array
+    /**
+     * @throws ReflectionException
+     */
+    public static function getRelationships(string $requestHandlerClass): array
     {
-        if (false === is_subclass_of($requestHandler, CreateResourceRequestHandlerInterface::class) &&
-            false === is_subclass_of($requestHandler, UpdateResourceRequestHandlerInterface::class)) {
-            throw new \InvalidArgumentException('Invalid RequestHandler provided');
+        if (false === method_exists($requestHandlerClass, 'getRelationships')) {
+            throw new InvalidArgumentException('RequestHandler doesn\'t have getRelationships method');
         }
 
-        if (false === method_exists($requestHandler, 'getRelationships')) {
-            throw new \InvalidArgumentException('RequestHandler doesn\'t have getAttributes method');
-        }
-
-        $getRelationshipsMethod = new ReflectionMethod($requestHandler, 'getRelationships');
+        $reflectionClass = new ReflectionClass($requestHandlerClass);
+        $requestHandlerInstance = $reflectionClass->newInstanceWithoutConstructor();
+        $getRelationshipsMethod = new ReflectionMethod($requestHandlerInstance, 'getRelationships');
         $getRelationshipsMethod->setAccessible(true);
 
         $relationships = [];
 
         /** @var InputRelationship $inputRelationship */
-        foreach ($getRelationshipsMethod->invoke($requestHandler) as $inputRelationship) {
+        foreach ($getRelationshipsMethod->invoke($requestHandlerInstance) as $inputRelationship) {
 
             $relationships[$inputRelationship->getName()] = new RelationshipSchema(
                 $inputRelationship->getName(),
-                '', // @todo
+                '', // @todo add support for relationships descriptions on write models
                 false === $inputRelationship->isOptional(),
                 $inputRelationship->isNullable(),
                 $inputRelationship->getType(),
