@@ -12,13 +12,12 @@ use JsonApiOpenApi\Annotation\Model\Attribute;
 use JsonApiOpenApi\Helper\OpenApiTypeHelper;
 use JsonApiOpenApi\Model\JsonApi\Schema\AttributeSchema;
 use ReflectionClass;
-use Undabot\JsonApi\Model\Resource\ResourceInterface;
 
 class AttributeScanner
 {
-    public static function scan(ResourceInterface $resource): array
+    public static function scan(string $resourceClass): array
     {
-        $reflect = new ReflectionClass($resource);
+        $reflect = new ReflectionClass($resourceClass);
         AnnotationRegistry::registerLoader('class_exists');
         $docParser = new DocParser();
         $docParser->setIgnoreNotImportedAnnotations(true);

@@ -15,23 +15,23 @@ use Undabot\SymfonyJsonApi\RequestHandler\UpdateResourceRequestHandlerInterface;
 
 class ResourceSchemaFactory
 {
-    public function createIdentifier(ResourceInterface $resource): ResourceIdentifierSchema
+    public function createIdentifier(string $type): ResourceIdentifierSchema
     {
-        return new ResourceIdentifierSchema($resource->getType());
+        return new ResourceIdentifierSchema($type);
     }
 
-    public function createReadSchema(ResourceInterface $resource): ?ResourceSchemaInterface
+    public function createReadSchema(string $resourceClass, string $type): ?ResourceSchemaInterface
     {
-        $attributes = AttributeScanner::scan($resource);
-        $relationships = RelationshipScanner::scan($resource);
+        $attributes = AttributeScanner::scan($resourceClass);
+        $relationships = RelationshipScanner::scan($resourceClass);
 
-        $schema = new ResourceReadSchema($resource->getType(), $attributes, $relationships);
+        $schema = new ResourceReadSchema($type, $attributes, $relationships);
 
         return $schema;
     }
 
     private function createCreateSchema(
-        ResourceInterface $resource,
+        string $type,
         ?CreateResourceRequestHandlerInterface $createResourceRequestHandler
     ): ?ResourceSchemaInterface {
 
@@ -42,14 +42,14 @@ class ResourceSchemaFactory
         $attributes = RequestHandlerScanner::getAttributes($createResourceRequestHandler);
         $relationships = RequestHandlerScanner::getRelationships($createResourceRequestHandler);
 
-        $schema = new ResourceCreateSchema($resource->getType(), $attributes, $relationships);
+        $schema = new ResourceCreateSchema($type, $attributes, $relationships);
 
         return $schema;
     }
 
 
     private function createUpdateSchema(
-        ResourceInterface $resource,
+        string $type,
         ?UpdateResourceRequestHandlerInterface $updateResourceRequestHandler
     ): ?ResourceSchemaInterface {
         if (null === $updateResourceRequestHandler) {
@@ -59,26 +59,30 @@ class ResourceSchemaFactory
         $attributes = RequestHandlerScanner::getAttributes($updateResourceRequestHandler);
         $relationships = RequestHandlerScanner::getRelationships($updateResourceRequestHandler);
 
-        $schema = new ResourceUpdateSchema($resource->getType(), $attributes, $relationships);
+        $schema = new ResourceUpdateSchema($type, $attributes, $relationships);
 
         return $schema;
     }
 
     public function createSchemaSet(
-        ResourceInterface $resource,
+        string $resourceClass,
         ?CreateResourceRequestHandlerInterface $createResourceRequestHandler = null,
         ?UpdateResourceRequestHandlerInterface $updateResourceRequestHandler = null
     ): ResourceSchemaSet {
+
+        // @todo is there better way to use the const
+        $type = $resourceClass::TYPE;
+
         $schemaSet = new ResourceSchemaSet(
-            $this->createIdentifier($resource),
-            $this->createReadSchema($resource),
-            $this->createCreateSchema($resource, $createResourceRequestHandler),
-            $this->createUpdateSchema($resource, $updateResourceRequestHandler),
+            $this->createIdentifier($type),
+            $this->createReadSchema($resourceClass, $type),
+            $this->createCreateSchema($type, $createResourceRequestHandler),
+            $this->createUpdateSchema($type, $updateResourceRequestHandler),
             );
 
         // Add to collection by FQCN and resource type
-        SchemaCollection::add(get_class($resource), $schemaSet);
-        SchemaCollection::add($resource->getType(), $schemaSet);
+        SchemaCollection::add($resourceClass, $schemaSet);
+        SchemaCollection::add($type, $schemaSet);
 
         return $schemaSet;
     }

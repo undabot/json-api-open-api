@@ -17,26 +17,14 @@ use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$bookResource = new Book(
-    'd290f1ee-6c54-4b01-90e6-d701748f0851',
-    'Kingdom of Hearts',
-    'The best book of all times',
-    20000,
-    'd290f1ee-6c54-4b01-90e6-d701748f0851',
-    [],
-    );
-
-$authorResource = new Author('d290f1ee-6c54-4b01-90e6-d701748f0851', 'Stephen King', []);
-$tagResource = new Tag('d290f1ee-6c54-4b01-90e6-d701748f0851', 'Stephen King', []);
-
 $resourceSchemaFactory = new ResourceSchemaFactory();
 
 $createBookRequestHandler = new CreateBookRequestHandler();
 $updateBookRequestHandler = new UpdateBookRequestHandler();
 
-$resourceSchemaFactory->createSchemaSet($authorResource);
-$resourceSchemaFactory->createSchemaSet($bookResource, $createBookRequestHandler, $updateBookRequestHandler);
-$resourceSchemaFactory->createSchemaSet($tagResource);
+$resourceSchemaFactory->createSchemaSet(Author::class);
+$resourceSchemaFactory->createSchemaSet(Book::class, $createBookRequestHandler, $updateBookRequestHandler);
+$resourceSchemaFactory->createSchemaSet(Tag::class);
 
 $api = new Api(
     'Example API',
