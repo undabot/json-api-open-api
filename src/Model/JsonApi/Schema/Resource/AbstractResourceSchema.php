@@ -18,14 +18,21 @@ abstract class AbstractResourceSchema
             $attributes[$attributeSchema->getTitle()] = $attributeSchema->toOpenApi();
         }
 
-        return [
+        $openApi = [
             'type' => 'object',
             'nullable' => false,
-            'required' => array_keys(array_filter($attributeSchemas, function (AttributeSchema $attributeSchema) {
-                return $attributeSchema->isRequired();
-            })),
             'properties' => $attributes,
         ];
+
+        $requiredAttributes = array_keys(array_filter($attributeSchemas, function (AttributeSchema $attributeSchema) {
+            return $attributeSchema->isRequired();
+        }));
+
+        if (false === empty($requiredAttributes)) {
+            $openApi['required'] = $requiredAttributes;
+        }
+
+        return $openApi;
     }
 
     protected function getRelationshipsOpenApi(array $relationshipSchemas)
@@ -37,14 +44,21 @@ abstract class AbstractResourceSchema
             $relationships[$relationshipSchema->getName()] = $relationshipSchema->toOpenApi();
         }
 
-        return [
+        $openApi = [
             'type' => 'object',
             'nullable' => false,
-            'required' => array_keys(array_filter($relationshipSchemas,
-                function (RelationshipSchema $relationshipSchema) {
-                    return $relationshipSchema->isRequired();
-                })),
             'properties' => $relationships,
         ];
+
+        $requiredRelationships = array_keys(array_filter($relationshipSchemas,
+            function (RelationshipSchema $relationshipSchema) {
+                return $relationshipSchema->isRequired();
+            }));
+
+        if (false === empty($requiredRelationships)) {
+            $openApi['required'] = $requiredRelationships;
+        }
+
+        return $openApi;
     }
 }

@@ -65,7 +65,6 @@ class ResourceCreateSchema extends AbstractResourceSchema implements ResourceSch
 
         $schema = [
             'type' => 'object',
-            'required' => $required,
             'properties' => [
                 'type' => [
                     'type' => 'string',
@@ -76,6 +75,10 @@ class ResourceCreateSchema extends AbstractResourceSchema implements ResourceSch
                 'relationships' => $relationships,
             ],
         ];
+
+        if (false === empty($required)) {
+            $schema['required'] = $required;
+        }
 
         return $schema;
     }

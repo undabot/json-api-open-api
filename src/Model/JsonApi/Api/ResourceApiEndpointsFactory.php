@@ -7,6 +7,7 @@ namespace JsonApiOpenApi\Model\JsonApi\Api;
 use JsonApiOpenApi\Model\JsonApi\Endpoint\CreateResourceEndpoint;
 use JsonApiOpenApi\Model\JsonApi\Endpoint\GetResourceCollectionEndpoint;
 use JsonApiOpenApi\Model\JsonApi\Endpoint\GetResourceEndpoint;
+use JsonApiOpenApi\Model\JsonApi\Endpoint\UpdateResourceEndpoint;
 use JsonApiOpenApi\Model\JsonApi\Schema\SchemaCollection;
 use JsonApiOpenApi\Model\OpenApi\ApiInterface;
 
@@ -176,6 +177,16 @@ class ResourceApiEndpointsFactory
             $createResourceEndpoint = new CreateResourceEndpoint(
                 SchemaCollection::get($this->resourceClassName)->getReadModel(),
                 SchemaCollection::get($this->resourceClassName)->getCreateModel(),
+                $this->path
+            );
+
+            $api->addEndpoint($createResourceEndpoint);
+        }
+
+        if (true === $this->update) {
+            $createResourceEndpoint = new UpdateResourceEndpoint(
+                SchemaCollection::get($this->resourceClassName)->getReadModel(),
+                SchemaCollection::get($this->resourceClassName)->getUpdateModel(),
                 $this->path
             );
 

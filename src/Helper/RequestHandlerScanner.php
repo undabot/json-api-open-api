@@ -15,9 +15,14 @@ use ReflectionMethod;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Url;
 
 class RequestHandlerScanner
 {
+    public static $constraintsTypeMap = [
+        Url::class => 'string',
+    ];
+
     /**
      * @throws ReflectionException
      */
@@ -43,6 +48,11 @@ class RequestHandlerScanner
             foreach ($definedAttribute->getConstraints() as $constraint) {
                 if ($constraint instanceof NotNull || $constraint instanceof NotBlank) {
                     $nullable = false;
+                }
+
+                $mappedValue = static::$constraintsTypeMap[get_class($constraint)] ?? null;
+                if (null !== $mappedValue) {
+                    $type = $mappedValue;
                 }
 
                 if ($constraint instanceof Type) {
