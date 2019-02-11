@@ -1,0 +1,37 @@
+{
+  "name": "undabot/json-api-open-api",
+  "authors": [
+    {
+      "name": "Zoran Antolović",
+      "email": "zoran.antolovic@undabot.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "gitlab",
+      "url": "git@gitlab.com:undabot/json-api-symfony.git"
+    },
+    {
+      "type": "gitlab",
+      "url": "git@gitlab.com:undabot/json-api-core.git"
+    }
+  ],
+  "require": {
+    "undabot/json-api-core": "dev-master@dev",
+    "undabot/json-api-symfony": "dev-master@dev",
+    "doctrine/annotations": "^1.6",
+    "symfony/yaml": "^4.2",
+    "swagger-api/swagger-ui": "^3.20"
+  },
+  "autoload": {
+    "psr-4": {
+      "JsonApiOpenApi\\": "src/",
+      "Example\\": "example/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  }
+}
