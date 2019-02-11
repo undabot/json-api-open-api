@@ -43,8 +43,8 @@ class UpdateBookRequestHandler extends AbstractResourceInputHandler implements U
     protected function getRelationships(): array
     {
         return [
-            InputRelationship::toOne('author', Author::TYPE, true),
-            InputRelationship::toMany('tags', Tag::TYPE, true),
+            InputRelationship::toOne('author', Author::TYPE, true, [], true),
+            InputRelationship::toMany('tags', Tag::TYPE, true, [], true),
         ];
     }
 

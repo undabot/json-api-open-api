@@ -319,7 +319,6 @@ components:
       required:
         - type
         - id
-        - relationships
       properties:
         id:
           type: string
@@ -350,9 +349,7 @@ components:
         relationships:
           type: object
           nullable: false
-          required:
-            - author
-            - tags
+          required: {  }
           properties:
             author:
               type: object
