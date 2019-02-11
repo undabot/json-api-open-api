@@ -20,8 +20,7 @@
     "undabot/json-api-core": "dev-master@dev",
     "undabot/json-api-symfony": "dev-master@dev",
     "doctrine/annotations": "^1.6",
-    "symfony/yaml": "^4.2",
-    "swagger-api/swagger-ui": "^3.20"
+    "symfony/yaml": "^4.2"
   },
   "autoload": {
     "psr-4": {
