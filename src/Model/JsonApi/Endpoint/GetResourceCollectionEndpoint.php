@@ -6,6 +6,7 @@ namespace JsonApiOpenApi\Model\JsonApi\Endpoint;
 
 use JsonApiOpenApi\Model\JsonApi\Response\ResourceCollectionResponse;
 use JsonApiOpenApi\Model\JsonApi\Schema\Query\IncludeQueryParam;
+use JsonApiOpenApi\Model\JsonApi\Schema\Query\PaginationQueryParam;
 use JsonApiOpenApi\Model\OpenApi\EndpointInterface;
 use JsonApiOpenApi\Model\OpenApi\ResourceSchemaInterface;
 use JsonApiOpenApi\Model\OpenApi\ResponseInterface;
@@ -94,7 +95,12 @@ class GetResourceCollectionEndpoint implements EndpointInterface
             }
         }
 
-        // @todo add pagination
+        if (false === empty($this->pagination)) {
+            foreach ($this->pagination as $paginationParameter) {
+                $paginationQueryParam = new PaginationQueryParam($paginationParameter);
+                $queryParams[] = $paginationQueryParam->toOpenApi();
+            }
+        }
 
         return $queryParams;
     }
@@ -113,6 +119,7 @@ class GetResourceCollectionEndpoint implements EndpointInterface
             'operationId' => 'list' . ucwords($this->resourceSchema->getType()) . 'Collection',
             'description' => 'List collection of ' . $this->resourceSchema->getType(),
             'parameters' => $this->getParams(),
+            'tags' => [$this->resourceSchema->getType()],
             'responses' => $responses,
         ];
     }

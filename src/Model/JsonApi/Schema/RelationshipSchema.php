@@ -12,7 +12,7 @@ class RelationshipSchema implements SchemaInterface
     /** @var string */
     private $name;
 
-    /** @var string */
+    /** @var string|null */
     private $description;
 
     /** @var bool */
@@ -29,7 +29,7 @@ class RelationshipSchema implements SchemaInterface
 
     public function __construct(
         string $name,
-        string $description,
+        ?string $description,
         bool $required,
         bool $nullable,
         string $targetResourceClass,

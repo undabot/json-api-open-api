@@ -18,6 +18,10 @@ abstract class AbstractResourceSchema
             $attributes[$attributeSchema->getTitle()] = $attributeSchema->toOpenApi();
         }
 
+        if (true === empty($attributes)) {
+            return [];
+        }
+
         $openApi = [
             'type' => 'object',
             'nullable' => false,
@@ -35,13 +39,17 @@ abstract class AbstractResourceSchema
         return $openApi;
     }
 
-    protected function getRelationshipsOpenApi(array $relationshipSchemas)
+    protected function getRelationshipsOpenApi(array $relationshipSchemas): array
     {
         $relationships = [];
 
         /** @var RelationshipSchema $relationshipSchema */
         foreach ($relationshipSchemas as $relationshipSchema) {
             $relationships[$relationshipSchema->getName()] = $relationshipSchema->toOpenApi();
+        }
+
+        if (true === empty($relationships)) {
+            return [];
         }
 
         $openApi = [

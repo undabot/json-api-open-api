@@ -71,13 +71,19 @@ class ResourceCreateSchema extends AbstractResourceSchema implements ResourceSch
                     'example' => $this->type,
                     'enum' => [$this->type],
                 ],
-                'attributes' => $attributes,
-                'relationships' => $relationships,
             ],
         ];
 
         if (false === empty($required)) {
             $schema['required'] = $required;
+        }
+
+        if (false === empty($attributes)) {
+            $schema['properties']['attributes'] = $attributes;
+        }
+
+        if (false === empty($relationships)) {
+            $schema['properties']['relationships'] = $relationships;
         }
 
         return $schema;

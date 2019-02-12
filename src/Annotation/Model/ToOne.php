@@ -19,7 +19,7 @@ class ToOne extends Relationship
     public $targetClass;
 
     /** @var bool */
-    public $nullable;
+    public $nullable = false;
 
     /** @var null|string */
     public $description;

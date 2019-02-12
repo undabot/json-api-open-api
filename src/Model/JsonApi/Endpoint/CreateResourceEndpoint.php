@@ -68,6 +68,7 @@ class CreateResourceEndpoint implements EndpointInterface
             'summary' => 'Create ' . $this->resourceReadSchema->getType(),
             'operationId' => 'create ' . ucwords($this->resourceReadSchema->getType()),
             'description' => 'Create ' . $this->resourceReadSchema->getType() . ' resource',
+            'tags' => [$this->resourceReadSchema->getType()],
             'responses' => $responses,
             'requestBody' => [
                 'description' => $this->resourceReadSchema->getType() . ' create model',

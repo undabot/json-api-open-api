@@ -44,6 +44,18 @@ class ResourceUpdateSchema extends AbstractResourceSchema implements ResourceSch
         $attributes = $this->getAttributesOpenApi($this->attributes);
         $relationships = $this->getRelationshipsOpenApi($this->relationships);
 
+        if (true === isset($attributes['properties'])) {
+            array_walk($attributes['properties'], function (array &$attribute) {
+                $attribute['nullable'] = true;
+            });
+        }
+
+        if (true === isset($relationships['properties'])) {
+            array_walk($relationships['properties'], function (array &$relationship) {
+                $relationship['nullable'] = true;
+            });
+        }
+
         $required = [
             'type',
             'id',
@@ -75,10 +87,16 @@ class ResourceUpdateSchema extends AbstractResourceSchema implements ResourceSch
                     'example' => $this->type,
                     'enum' => [$this->type],
                 ],
-                'attributes' => $attributes,
-                'relationships' => $relationships,
             ],
         ];
+
+        if (false === empty($attributes)) {
+            $schema['properties']['attributes'] = $attributes;
+        }
+
+        if (false === empty($relationships)) {
+            $schema['properties']['relationships'] = $relationships;
+        }
 
         return $schema;
     }

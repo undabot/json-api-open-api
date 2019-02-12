@@ -14,9 +14,6 @@ use JsonApiOpenApi\Model\OpenApi\ResponseInterface;
 class UpdateResourceEndpoint implements EndpointInterface
 {
     /** @var ResourceSchemaInterface */
-    private $resourceReadSchema;
-
-    /** @var ResourceSchemaInterface */
     private $resourceUpdateSchema;
 
     /** @var string */
@@ -31,12 +28,11 @@ class UpdateResourceEndpoint implements EndpointInterface
         string $path,
         array $errorResponses = []
     ) {
-        $this->resourceReadSchema = $resourceReadSchema;
         $this->resourceUpdateSchema = $resourceUpdateSchema;
         $this->path = $path;
 
         $this->responses = array_merge([
-            new ResourceUpdatedResponse($this->resourceReadSchema),
+            new ResourceUpdatedResponse($resourceReadSchema),
         ], $errorResponses);
     }
 
@@ -65,12 +61,13 @@ class UpdateResourceEndpoint implements EndpointInterface
         );
 
         return [
-            'summary' => 'Update ' . $this->resourceReadSchema->getType(),
-            'operationId' => 'update ' . ucwords($this->resourceReadSchema->getType()),
-            'description' => 'Update ' . $this->resourceReadSchema->getType() . ' resource',
+            'summary' => 'Update ' . $this->resourceUpdateSchema->getType(),
+            'operationId' => 'update ' . ucwords($this->resourceUpdateSchema->getType()),
+            'description' => 'Update ' . $this->resourceUpdateSchema->getType() . ' resource',
+            'tags' => [$this->resourceUpdateSchema->getType()],
             'responses' => $responses,
             'requestBody' => [
-                'description' => $this->resourceReadSchema->getType() . ' update model',
+                'description' => $this->resourceUpdateSchema->getType() . ' update model',
                 'required' => true,
                 'content' => [
                     $request->getContentType() => [
