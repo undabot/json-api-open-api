@@ -65,10 +65,16 @@ class ResourceReadSchema extends AbstractResourceSchema implements ResourceSchem
                     'example' => $this->type,
                     'enum' => [$this->type],
                 ],
-                'attributes' => $attributes,
-                'relationships' => $relationships,
             ],
         ];
+
+        if (false === empty($attributes)) {
+            $schema['properties']['attributes'] = $attributes;
+        }
+
+        if (false === empty($relationships)) {
+            $schema['properties']['relationships'] = $relationships;
+        }
 
         return $schema;
     }
