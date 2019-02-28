@@ -66,7 +66,7 @@ class UpdateResourceEndpoint implements EndpointInterface
 
         return [
             'summary' => 'Update ' . $this->resourceReadSchema->getType(),
-            'operationId' => 'update ' . ucwords($this->resourceReadSchema->getType()),
+            'operationId' => 'update' . ucwords($this->resourceReadSchema->getType()),
             'description' => 'Update ' . $this->resourceReadSchema->getType() . ' resource',
             'responses' => $responses,
             'requestBody' => [
