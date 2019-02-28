@@ -89,7 +89,7 @@ class GetResourceEndpoint implements EndpointInterface
 
         return [
             'summary' => 'Get ' . $this->resourceSchema->getType(),
-            'operationId' => 'get ' . ucwords($this->resourceSchema->getType()),
+            'operationId' => 'get' . ucwords($this->resourceSchema->getType()),
             'description' => 'Get single ' . $this->resourceSchema->getType() . ' resource',
             'tags' => [$this->resourceSchema->getType()],
             'parameters' => $this->getParams(),
