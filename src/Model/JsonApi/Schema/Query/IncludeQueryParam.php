@@ -4,20 +4,55 @@ declare(strict_types=1);
 
 namespace JsonApiOpenApi\Model\JsonApi\Schema\Query;
 
-use JsonApiOpenApi\Model\JsonApi\Schema\QueryParam;
-use JsonApiOpenApi\Model\JsonApi\Schema\StringSchema;
+use JsonApiOpenApi\Model\OpenApi\SchemaInterface;
 
-class IncludeQueryParam extends QueryParam
+class IncludeQueryParam implements SchemaInterface
 {
-    public function __construct(array $includes, ?string $description = null)
+    /** @var string|null */
+    private $description;
+
+    /** @var string[] */
+    private $includes;
+
+    /** @var null|string[] */
+    private $default;
+
+    public function __construct(array $includes, ?string $description = null, array $default = null)
     {
-        $includesString = implode(', ', $includes);
-        $schema = new StringSchema($includesString);
+        $this->includes = $includes;
+        $this->description = $description;
+        $this->default = $default;
 
         if (null === $description) {
-            $description = 'Relationships to be included. Available: ' . $includesString;
+            $this->description = 'Relationships to be included. Available: ' . implode(',', $includes);
+        }
+    }
+
+    public function toOpenApi(): array
+    {
+        $schema = [
+            'in' => 'query',
+            'name' => 'include',
+            'required' => false,
+            'description' => $this->description,
+            'style' => 'form',
+            'explode' => false,
+            'schema' => [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'string',
+                ],
+            ],
+        ];
+
+        if (false === empty($this->includes)) {
+            $schema['schema']['items']['enum'] = $this->includes;
         }
 
-        parent::__construct('include', false, $description, $schema);
+        if (null !== $this->default) {
+            $schema['schema']['items']['default'] = $this->default;
+        }
+
+        return $schema;
     }
 }

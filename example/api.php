@@ -34,6 +34,7 @@ ResourceApiEndpointsFactory::make()
     ->forResource(Book::class)
     ->withGetSingle()
     ->withSingleIncludes(['author', 'tags'])
+    ->withCollectionIncludes(['author', 'tags'])
     ->withGetCollection()
     ->withCollectionFilters([
         new StringFilterQueryParam('author', false, 'Author ID filter'),
