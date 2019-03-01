@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace JsonApiOpenApi\Model\JsonApi\Endpoint;
 
 use JsonApiOpenApi\Model\JsonApi\Response\ResourceCollectionResponse;
+use JsonApiOpenApi\Model\JsonApi\Schema\Filter\FilterSetQueryParam;
 use JsonApiOpenApi\Model\JsonApi\Schema\Query\IncludeQueryParam;
 use JsonApiOpenApi\Model\OpenApi\EndpointInterface;
 use JsonApiOpenApi\Model\OpenApi\ResourceSchemaInterface;
 use JsonApiOpenApi\Model\OpenApi\ResponseInterface;
+use JsonApiOpenApi\Model\OpenApi\SchemaInterface;
 
 class GetResourceCollectionEndpoint implements EndpointInterface
 {
@@ -33,7 +35,7 @@ class GetResourceCollectionEndpoint implements EndpointInterface
     /** @var array */
     private $sorts = [];
 
-    /** @var null|array */
+    /** @var null|SchemaInterface */
     private $pagination;
 
     public function __construct(
@@ -43,7 +45,7 @@ class GetResourceCollectionEndpoint implements EndpointInterface
         array $sorts = [],
         array $includes = [],
         array $fields = [],
-        array $pagination = null,
+        ?SchemaInterface $pagination = null,
         array $errorResponses = []
     ) {
         $this->resourceSchema = $resourceSchema;
@@ -89,12 +91,13 @@ class GetResourceCollectionEndpoint implements EndpointInterface
         }
 
         if (false === empty($this->filters)) {
-            foreach ($this->filters as $filter) {
-                $queryParams[] = $filter->toOpenApi();
-            }
+            $filterSet = new FilterSetQueryParam('filter', $this->filters);
+            $queryParams[] = $filterSet->toOpenApi();
         }
 
-        // @todo add pagination
+        if (null !== $this->pagination) {
+            $queryParams[] = $this->pagination->toOpenApi();
+        }
 
         return $queryParams;
     }

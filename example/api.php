@@ -8,8 +8,8 @@ use Example\Book\Resource\Author;
 use Example\Book\Resource\Book;
 use Example\Book\Resource\Tag;
 use JsonApiOpenApi\Model\JsonApi\Api\ResourceApiEndpointsFactory;
-use JsonApiOpenApi\Model\JsonApi\Schema\Filter\IntegerFilterQueryParam;
-use JsonApiOpenApi\Model\JsonApi\Schema\Filter\StringFilterQueryParam;
+use JsonApiOpenApi\Model\JsonApi\Schema\Filter\FilterQueryParam;
+use JsonApiOpenApi\Model\JsonApi\Schema\Query\OffsetBasedPaginationQueryParam;
 use JsonApiOpenApi\Model\JsonApi\Schema\Resource\ResourceSchemaFactory;
 use JsonApiOpenApi\Model\JsonApi\Schema\SchemaCollection;
 use JsonApiOpenApi\Model\OpenApi\Api;
@@ -37,12 +37,13 @@ ResourceApiEndpointsFactory::make()
     ->withCollectionIncludes(['author', 'tags'])
     ->withGetCollection()
     ->withCollectionFilters([
-        new StringFilterQueryParam('author', false, 'Author ID filter'),
-        new StringFilterQueryParam('title', false, 'Title filter'),
-        new IntegerFilterQueryParam('priceMin', false, 'Price filter range'),
-        new IntegerFilterQueryParam('priceMax', false, 'Price filter range'),
+        FilterQueryParam::makeString('author', false, 'Author ID filter'),
+        FilterQueryParam::makeString('author', false, 'Author ID filter'),
+        FilterQueryParam::makeString('title', false, 'Title filter'),
+        FilterQueryParam::makeInt('priceMin', false, 'Price filter range'),
+        FilterQueryParam::makeInt('priceMax', false, 'Price filter range'),
     ])
-    ->withCollectionPagination(['offset', 'size'])
+    ->withCollectionPagination(new OffsetBasedPaginationQueryParam())
     ->withCollectionSorts(['title'])
     ->withCreate()
     ->withUpdate()

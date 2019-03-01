@@ -10,6 +10,7 @@ use JsonApiOpenApi\Model\JsonApi\Endpoint\GetResourceEndpoint;
 use JsonApiOpenApi\Model\JsonApi\Endpoint\UpdateResourceEndpoint;
 use JsonApiOpenApi\Model\JsonApi\Schema\SchemaCollection;
 use JsonApiOpenApi\Model\OpenApi\ApiInterface;
+use JsonApiOpenApi\Model\OpenApi\SchemaInterface;
 
 class ResourceApiEndpointsFactory
 {
@@ -52,8 +53,8 @@ class ResourceApiEndpointsFactory
     /** @var array */
     private $collectionSorts = [];
 
-    /** @var array */
-    private $collectionPagination = [];
+    /** @var SchemaInterface|null */
+    private $paginationSchema;
 
     public static function make()
     {
@@ -102,9 +103,9 @@ class ResourceApiEndpointsFactory
         return $this;
     }
 
-    public function withCollectionPagination(array $pagination = ['number', 'size']): ResourceApiEndpointsFactory
+    public function withCollectionPagination(SchemaInterface $paginationSchema): ResourceApiEndpointsFactory
     {
-        $this->collectionPagination = $pagination;
+        $this->paginationSchema = $paginationSchema;
 
         return $this;
     }
@@ -154,7 +155,7 @@ class ResourceApiEndpointsFactory
                 $this->collectionSorts,
                 $this->collectionIncludes,
                 $this->collectionFields,
-                $this->collectionPagination
+                $this->paginationSchema
             // @todo error responses
             );
 
