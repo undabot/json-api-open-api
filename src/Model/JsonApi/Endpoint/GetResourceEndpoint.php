@@ -40,12 +40,12 @@ class GetResourceEndpoint implements EndpointInterface
     ) {
         $this->resourceSchema = $resourceSchema;
         $this->path = $path;
+        $this->includes = $includes;
 
         $this->responses = array_merge([
-            new ResourceResponse($this->resourceSchema),
+            new ResourceResponse($this->resourceSchema, $this->includes),
         ], $errorResponses);
 
-        $this->includes = $includes;
         $this->fields = $fields;
     }
 
@@ -67,7 +67,7 @@ class GetResourceEndpoint implements EndpointInterface
         $params[] = $idPathParam->toOpenApi();
 
         if (null !== $this->includes) {
-            $include = new IncludeQueryParam($this->includes);
+            $include = new IncludeQueryParam(array_keys($this->includes));
             $params[] = $include->toOpenApi();
         }
 

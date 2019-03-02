@@ -36,8 +36,14 @@ ResourceApiEndpointsFactory::make()
     ->atPath('/books')
     ->forResource(Book::class)
     ->withGetSingle()
-    ->withSingleIncludes(['author', 'tags'])
-    ->withCollectionIncludes(['author', 'tags'])
+    ->withSingleIncludes([
+        'author' => Author::class,
+        'tags' => Tag::class,
+    ])
+    ->withCollectionIncludes([
+        'author' => Author::class,
+        'tags' => Tag::class,
+    ])
     ->withGetCollection()
     ->withCollectionFilters([
         FilterQueryParam::makeString('author', false, 'Author ID filter'),

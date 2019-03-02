@@ -10,12 +10,18 @@ use JsonApiOpenApi\Model\OpenApi\ResponseInterface;
 
 class ResourceResponse implements ResponseInterface
 {
+    use IncludableResponseTrait;
+
     /** @var ResourceSchemaInterface */
     private $resourceSchema;
 
-    public function __construct(ResourceSchemaInterface $resourceSchema)
+    /** @var array */
+    private $includes;
+
+    public function __construct(ResourceSchemaInterface $resourceSchema, array $includes = [])
     {
         $this->resourceSchema = $resourceSchema;
+        $this->includes = $includes;
     }
 
     public function getStatusCode(): int
@@ -35,21 +41,29 @@ class ResourceResponse implements ResponseInterface
 
     public function toOpenApi()
     {
-        return [
-            'description' => $this->getDescription(),
-            'content' => [
-                $this->getContentType() => [
-                    'schema' => [
-                        'type' => 'object',
-                        'required' => ['data'],
-                        'properties' => [
-                            'data' => [
-                                '$ref' => SchemaReferenceGenerator::ref($this->resourceSchema->getReference()),
-                            ],
-                        ],
+        $responseContentSchema = [
+            'schema' => [
+                'type' => 'object',
+                'required' => ['data'],
+                'properties' => [
+                    'data' => [
+                        '$ref' => SchemaReferenceGenerator::ref($this->resourceSchema->getReference()),
                     ],
                 ],
             ],
         ];
+
+        if (false === empty($this->includes)) {
+            $responseContentSchema = $this->generateIncludedResponseProperty($responseContentSchema, $this->includes);
+        }
+
+        $response = [
+            'description' => $this->getDescription(),
+            'content' => [
+                $this->getContentType() => $responseContentSchema,
+            ],
+        ];
+
+        return $response;
     }
 }

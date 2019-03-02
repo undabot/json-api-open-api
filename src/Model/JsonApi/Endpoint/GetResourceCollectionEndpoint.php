@@ -50,14 +50,14 @@ class GetResourceCollectionEndpoint implements EndpointInterface
     ) {
         $this->resourceSchema = $resourceSchema;
         $this->path = $path;
+        $this->includes = $includes;
 
         $this->responses = array_merge([
-            new ResourceCollectionResponse($this->resourceSchema),
+            new ResourceCollectionResponse($this->resourceSchema, $this->includes),
         ], $errorResponses);
 
         $this->filters = $filters;
         $this->sorts = $sorts;
-        $this->includes = $includes;
         $this->fields = $fields;
         $this->pagination = $pagination;
     }
@@ -82,7 +82,7 @@ class GetResourceCollectionEndpoint implements EndpointInterface
         $queryParams = [];
 
         if (0 !== count($this->includes)) {
-            $include = new IncludeQueryParam($this->includes);
+            $include = new IncludeQueryParam(array_keys($this->includes));
             $queryParams[] = $include->toOpenApi();
         }
 
