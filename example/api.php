@@ -13,6 +13,7 @@ use JsonApiOpenApi\Model\JsonApi\Schema\Filter\StringFilterQueryParam;
 use JsonApiOpenApi\Model\JsonApi\Schema\Resource\ResourceSchemaFactory;
 use JsonApiOpenApi\Model\JsonApi\Schema\SchemaCollection;
 use JsonApiOpenApi\Model\OpenApi\Api;
+use JsonApiOpenApi\Model\OpenApi\Server;
 use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -28,6 +29,8 @@ $api = new Api(
     '1.0.0',
     'Example API documentation for JSON:API'
 );
+
+$api->addServer(new Server('http://jsonapi.undabot.com'));
 
 ResourceApiEndpointsFactory::make()
     ->atPath('/books')

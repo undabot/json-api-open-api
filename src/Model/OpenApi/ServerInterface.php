@@ -6,4 +6,5 @@ namespace JsonApiOpenApi\Model\OpenApi;
 
 interface ServerInterface
 {
+    public function toOpenApi(): array;
 }

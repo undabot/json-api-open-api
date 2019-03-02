@@ -55,6 +55,11 @@ class Api implements ApiInterface
             'paths' => [],
         ];
 
+        /** @var ServerInterface $server */
+        foreach ($this->servers as $server) {
+            $api['servers'][] = $server->toOpenApi();
+        }
+
         /** @var EndpointInterface $endpoint */
         foreach ($this->endpoints as $endpoint) {
             $api['paths'][$endpoint->getPath()][$endpoint->getMethod()] = $endpoint->toOpenApi();
