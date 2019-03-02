@@ -14,6 +14,9 @@ use JsonApiOpenApi\Model\OpenApi\ResponseInterface;
 class UpdateResourceEndpoint implements EndpointInterface
 {
     /** @var ResourceSchemaInterface */
+    private $resourceReadSchema;
+
+    /** @var ResourceSchemaInterface */
     private $resourceUpdateSchema;
 
     /** @var string */
