@@ -97,7 +97,7 @@ class RequestHandlerScanner
                 $inputRelationship->getName(),
                 '', // @todo add support for relationships descriptions on write models
                 false === $inputRelationship->isOptional(),
-                $inputRelationship->isNullable(),
+                $inputRelationship->isAllowEmpty(),
                 $inputRelationship->getType(),
                 $inputRelationship->isToMany()
             );
