@@ -17,8 +17,8 @@
     }
   ],
   "require": {
-    "undabot/json-api-core": "1.0.0",
-    "undabot/json-api-symfony": "1.0.0",
+    "undabot/json-api-core": "^1.0.0",
+    "undabot/json-api-symfony": "^1.0.0",
     "doctrine/annotations": "^1.6",
     "symfony/yaml": "^4.2"
   },
