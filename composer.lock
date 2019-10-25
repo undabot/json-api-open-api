@@ -4,8 +4,70 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f10e6f98996f5ec39260e2fde9b1d098",
+    "content-hash": "3aee6a35c1458def9073ce1bc7e230cd",
     "packages": [
+        {
+            "name": "beberlei/assert",
+            "version": "v3.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beberlei/assert.git",
+                "reference": "99508be011753690fe108ded450f5caaae180cfa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/99508be011753690fe108ded450f5caaae180cfa",
+                "reference": "99508be011753690fe108ded450f5caaae180cfa",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-simplexml": "*",
+                "php": "^7"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "*",
+                "phpstan/phpstan-shim": "*",
+                "phpunit/phpunit": ">=6.0.0 <8"
+            },
+            "suggest": {
+                "ext-intl": "Needed to allow Assertion::count(), Assertion::isCountable(), Assertion::minCount(), and Assertion::maxCount() to operate on ResourceBundles"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Assert\\": "lib/Assert"
+                },
+                "files": [
+                    "lib/Assert/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Richard Quadling",
+                    "email": "rquadling@gmail.com",
+                    "role": "Collaborator"
+                }
+            ],
+            "description": "Thin assertion library for input validation in business models.",
+            "keywords": [
+                "assert",
+                "assertion",
+                "validation"
+            ],
+            "time": "2019-10-10T10:33:57+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.6.0",
@@ -2950,19 +3012,20 @@
         },
         {
             "name": "undabot/json-api-core",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.com:undabot/json-api-core.git",
-                "reference": "c685dfffb8972fcd2993ae9bcd6d360666ce6cb0"
+                "url": "https://gitlab.com/undabot/json-api-core.git",
+                "reference": "a4aefaa8cc82565e2f9001605e3374a583e4d892"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/undabot%2Fjson-api-core/repository/archive.zip?sha=c685dfffb8972fcd2993ae9bcd6d360666ce6cb0",
-                "reference": "c685dfffb8972fcd2993ae9bcd6d360666ce6cb0",
+                "url": "https://gitlab.com/api/v4/projects/undabot%2Fjson-api-core/repository/archive.zip?sha=a4aefaa8cc82565e2f9001605e3374a583e4d892",
+                "reference": "a4aefaa8cc82565e2f9001605e3374a583e4d892",
                 "shasum": ""
             },
             "require": {
+                "beberlei/assert": "^3.2",
                 "php": "^7.3"
             },
             "require-dev": {
@@ -2996,20 +3059,20 @@
             "license": [
                 "Apache-2.0"
             ],
-            "time": "2019-02-06T13:42:06+00:00"
+            "time": "2019-03-30T18:33:36+00:00"
         },
         {
             "name": "undabot/json-api-symfony",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.com:undabot/json-api-symfony.git",
-                "reference": "018d920cd90131848a1622dc30b8379a565a81d7"
+                "url": "https://gitlab.com/undabot/json-api-symfony.git",
+                "reference": "3ca52aa94a38626d9426b890830b7f48218dd715"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/undabot%2Fjson-api-symfony/repository/archive.zip?sha=018d920cd90131848a1622dc30b8379a565a81d7",
-                "reference": "018d920cd90131848a1622dc30b8379a565a81d7",
+                "url": "https://gitlab.com/api/v4/projects/undabot%2Fjson-api-symfony/repository/archive.zip?sha=3ca52aa94a38626d9426b890830b7f48218dd715",
+                "reference": "3ca52aa94a38626d9426b890830b7f48218dd715",
                 "shasum": ""
             },
             "require": {
@@ -3017,7 +3080,7 @@
                 "symfony/http-kernel": "^4.2",
                 "symfony/orm-pack": "^1.0",
                 "symfony/validator": "^4.2",
-                "undabot/json-api-core": "dev-master@dev"
+                "undabot/json-api-core": "^1.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.14",
@@ -3047,7 +3110,7 @@
                     "phpunit"
                 ]
             },
-            "time": "2019-02-06T15:48:11+00:00"
+            "time": "2019-10-24T10:44:04+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -3160,10 +3223,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "undabot/json-api-core": 20,
-        "undabot/json-api-symfony": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
