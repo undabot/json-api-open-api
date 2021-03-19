@@ -1,6 +1,7 @@
 {
   "name": "undabot/json-api-open-api",
   "description": "Package for generating Open API documentation",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "Undabot backend team",
