@@ -1,9 +1,10 @@
 {
   "name": "undabot/json-api-open-api",
+  "description": "Package for generating Open API documentation",
   "authors": [
     {
-      "name": "Zoran Antolović",
-      "email": "zoran.antolovic@undabot.com"
+      "name": "Undabot backend team",
+      "email": "backend@undabot.com"
     }
   ],
   "repositories": [
