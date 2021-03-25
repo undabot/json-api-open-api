@@ -8,21 +8,12 @@
       "email": "backend@undabot.com"
     }
   ],
-  "repositories": [
-    {
-      "type": "gitlab",
-      "url": "git@gitlab.com:undabot/json-api-symfony.git"
-    },
-    {
-      "type": "gitlab",
-      "url": "git@gitlab.com:undabot/json-api-core.git"
-    }
-  ],
+  "repositories": [],
   "require": {
-    "undabot/json-api-core": "^1.0.0",
-    "undabot/json-api-symfony": "^1.0.0",
-    "doctrine/annotations": "^1.6",
-    "symfony/yaml": "^4.2"
+    "undabot/json-api-core": "^2.1.0",
+    "undabot/json-api-symfony": "^2.2.0",
+    "doctrine/annotations": "^1.12",
+    "symfony/yaml": "^5.2"
   },
   "autoload": {
     "psr-4": {
